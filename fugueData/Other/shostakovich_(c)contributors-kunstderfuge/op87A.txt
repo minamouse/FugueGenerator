@@ -1,0 +1,116 @@
+               The Shostakovich Opus 87 Home Page
+
+                  www.GeoCities.com/Vienna/5619
+
+                By Jose Oscar de Almeida Marques
+                     marques@newsguy.com
+
+
+Arrangements
+
+ This section isn't for the purist, so skip it if you can't stand
+ the idea of hearing these pieces  in other guises than the black
+ and white piano originals.  These  arrangements  came  up  as  a
+ by-product  of  the sequencing of the "straight" versions, but I
+ am too much in love with them  to just let them lie forgotten on
+ my hard disk.  Anyway, get these at your own risk  and  keep  in
+ mind  that  Shostakovich  isn't  the  least  bit responsible for
+ them...
+
+     Fugue04.mid
+
+     The E minor Fugue is a  double fugue in the traditional cut;
+     the first subject is presented in the first (slow)  section,
+     the (faster) second section takes care of the second subject
+     and  both  subjects are combined in the concluding part.  It
+     is natural to attribute each subject and associated thematic
+     material to a different instrumental  group, and this is how
+     strings and brass  help  to  aurally  clarify  the  dazzling
+     contrapuntal  texture  of  such  passages  in  which the two
+     subjects are combined with each other and with themselves in
+     a very close stretto.
+
+     Fugue06.mid
+
+     Am I the only one to  hear  in the B minor Fugue echoes from
+     the elaborate polyphonic  canzoni  of  Andrea  and  Giovanni
+     Gabrieli?  I set it for brass ensemble and all the parts are
+     doubled  with a delay of some tenths of second, to reproduce
+     the ambience of a cathedral in Venice.
+
+     Fugue11.mid
+
+     This is a transcription  of  the  B major Fugue for woodwind
+     trio:  flute, English horn and  bassoon.   This  lively  and
+     extrovert  piece  is  very  well  suited,  I believe, to the
+     woodwind trio idiom.  Now  I  wonder  if human players could
+     actually play this five-sharp piece as fast as it  is  heard
+     here...
+
+     Fugue12.mid
+
+     The G sharp minor Fugue is a rhythmically very complex piece
+     in 5/4 meter, and from the beginning I wondered how it would
+     sound played by a jazz ensemble.  I added to it a drum track
+     (which  I  ripped off from a "Take Five" MIDI) and the final
+     result  got   some   favorable   comments   from  people  in
+     alt.fan.shostakovich  and  elsewhere.   For  all  its  jazzy
+     character, this "Take Five Fugue" is an exact  transcription
+     of the piano piece, except for the addition of drums and the
+     fact  that  the  bass  plays  one  octave  lower than in the
+     original.
+
+     Fugue13.mid
+
+     The only five-voice fugue  in  the collection appears as the
+     natural candidate for a woodwind quintet  transcription.   A
+     restrained  and meditative Adagio, it displays some luminous
+     entries of  the  subject,  which  the different instrumental
+     timbres put on a whole new  light.   The  medium  proved  so
+     adequate to the music that I didn't hesitate to transpose it
+     one  diminished  fourth upwards to B flat so  that  it would
+     better fit the registers and capabilities of the instruments.
+     [Thanks to  Francis Markey for suggesting this key instead of
+     my former choice of A Major.]
+
+     Fugue14.mid
+
+     I chose the string orchestra  for  this arrangement of the E
+     flat minor Fugue, but added a trio of  woodwind  instruments
+     that  pick  up  the  subject  and  counter-subject  at  some
+     structurally significant passages.  In this I was influenced
+     by   Hermann   Scherchen's   impressive  instrumentation  of
+     Contrapunctus IX from J.S. Bach's Art of the Fugue.
+
+     Prel16.mid
+
+     When I sequenced the original Prelude I was attracted by the
+     clever way the different layers  of the musical texture were
+     compressed on the two piano staves.  I separated the  layers
+     to   get   a   better  grasp  of  the  structure,  and  this
+     instrumental arrangement came  as  a natural consequence.  A
+     short  and  pungent  theme,  with  a  very  Shostakovitchian
+     harmonic twist, is followed by three Baroque variations  and
+     a  conclusion.   More  than  just  an analytical study, this
+     arrangement came off as a  quite enjoyable piece of music as
+     well.
+
+     Prel22.mid
+
+     Admittedly I went a bit over the top in the  arrangement  of
+     the  G  minor  Prelude.  But for all the liberties I took in
+     relation to the parsing and  distribution of the voices, and
+     the many instrument changes, all the notes are exactly those
+     written by Shostakovich.  I tried to reinforce the  hypnotic
+     character  of  the long ostinati, and didn't neglect the use
+     of "electronic" instruments to get the desired effect.
+
+     Fugue22.mid
+
+     The four voices of the  G  minor  Fugue fit so perfectly the
+     register of the string quartet instruments that I can't help
+     believing that Shostakovich had this ensemble in  mind  when
+     he devised this piece.  Here I chose again the warm and full
+     sound  of the string orchestra as the ideal vehicle for this
+     music.  The transcription  is  once  more exact, with basses
+     doubling the cellos one octave lower at some key points.
