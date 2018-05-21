@@ -19,14 +19,11 @@ def get_file_names(path):
 def validate(files):
     pieces = []
     for f in files:
-        if os.path.getsize(f) > 20000:
-            pass
-        else:
-            try:
-                music21.converter.parse(f)
-                pieces.append(f)
-            except:
-                pass
+        try:
+            music21.converter.parse(f)
+            pieces.append(f)
+        except:
+            print(f, "won't parse")
     return pieces
 
 files = get_file_names("fugueData")
