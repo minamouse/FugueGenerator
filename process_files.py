@@ -26,7 +26,7 @@ def validate(files):
             print(f, "won't parse")
     return pieces
 
-files = get_file_names("fugueData")
+files = get_file_names("fugueData/test")
 validated_files = validate(files)
 initialize_fugues(validated_files)
 
