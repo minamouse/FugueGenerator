@@ -29,4 +29,6 @@ def validate(files):
 files = get_file_names("fugueData")
 validated_files = validate(files)
 initialize_fugues(validated_files)
+Xoh = make_one_hot_vector_X(dataset["X"], len(dataset["X"]), len(dataset["X"][0]), populate_pitch_values())
+Yoh = make_one_hot_vector_Y(dataset["Y"], len(dataset["Y"]), len(dataset["Y"][0]), len(dataset["Y"][0][0])
 
