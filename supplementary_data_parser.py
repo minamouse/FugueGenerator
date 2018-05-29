@@ -7,7 +7,8 @@ def populate_pitch_values():
 	pitch_classes = ['C', 'C#', 'D', 'E-', 'E', 'F', 'F#', 'G', 'G#', 'A', 'B-', 'B']
 	for i in range(0, 127):
 		note_name = pitch_classes[i % 12]
-		register = i/12 - 1
+		# register = i/12 - 1
+		register = (i + 12 // 2) // 12
 		pitch_values.append(note_name+str(register))
 	pitch_values.append('R')
 	pitch_values.append('_')
