@@ -30,7 +30,7 @@ n_s = 64 # hidden state size of post-attention LSTM
 X = np.zeros((m, Tx))
 Y = np.zeros((m, Ty, n_c_Y))
 Xoh = np.zeros((m, Tx, n_pitches)) # ignoring subdivision information for now
-Yoh = np.zeros((m, Ty, n_pitches))
+Yoh = np.zeros((m, Ty, n_c_Y-1, n_pitches))
 
 print('Number of timesteps in subjects: ', Tx)
 print('Number of timesteps in fugues: ', Ty)
@@ -43,6 +43,13 @@ densor1 = Dense(n_units_densor1, activation="tanh")
 densor2 = Dense(n_units_densor2, activation="relu")
 activator = Activation(softmax(axis = 1), name="attention_weights")
 dotor = Dot(axes = 1)
+
+# Output layers
+post_activation_LSTM_cell = LSTM(n_s, return_state = True)
+output_layer_1 = Dense(len(n_pitches), activation=softmax)
+output_layer_2 = Dense(len(n_pitches), activation=softmax)
+output_layer_3 = Dense(len(n_pitches), activation=softmax)
+output_layer_4 = Dense(len(n_pitches), activation=softmax)
 
 # One step of attention weights computation. Get a context vector for a particular time step
 def one_step_attention(a, s_prev):
