@@ -3,13 +3,14 @@ MAY 28 2018
 ADITYA CHANDER
 SAMANTHA SILVERSTEIN
 MARINA COTTRELL
-Based on Neural Machine Translation assignment from Coursera – NLP/Sequence Models'''
+Based on Neural Machine Translation assignment from Coursera – NLP/Sequence Models'''
 
 from keras.models import Model
 from keras.layers import Input, LSTM, Dense, Activation, Dropout, Reshape, Lambda, RepeatVector, Concatenate, Dot
 from keras.optimizers import Adam
 import numpy as np
 from music21 import midi
+from process_files import *
 
 # Dimensions of arrays
 Tx = None
@@ -32,10 +33,6 @@ Y = np.zeros((m, Ty, n_c_Y))
 Xoh = np.zeros((m, Tx, n_pitches)) # ignoring subdivision information for now
 Yoh = np.zeros((m, Ty, n_c_Y-1, n_pitches))
 
-print('Number of timesteps in subjects: ', Tx)
-print('Number of timesteps in fugues: ', Ty)
-print('Number of training examples: ', m)
-
 # Define shared layers as global variables
 repeator = RepeatVector(Tx)
 concatenator = Concatenate(axis=-1)
@@ -46,10 +43,19 @@ dotor = Dot(axes = 1)
 
 # Output layers
 post_activation_LSTM_cell = LSTM(n_s, return_state = True)
-output_layer_1 = Dense(len(n_pitches), activation=softmax)
-output_layer_2 = Dense(len(n_pitches), activation=softmax)
-output_layer_3 = Dense(len(n_pitches), activation=softmax)
-output_layer_4 = Dense(len(n_pitches), activation=softmax)
+output_layer = Dense(len(n_pitches), activation=softmax)
+
+print('Number of timesteps in subjects: ', Tx)
+print('Number of timesteps in fugues: ', Ty)
+print('Number of training examples: ', m)
+
+# Load in the data
+def load_data():
+	X, Y, Xoh, Yoh = return_data()
+	Tx = X.shape[1]
+	Ty = Y.shape[1]
+	m = X.shape[0]
+	return Tx, Ty, m
 
 # One step of attention weights computation. Get a context vector for a particular time step
 def one_step_attention(a, s_prev):
@@ -66,7 +72,6 @@ Tx: max fugue subject length
 Ty: max fugue length
 n_a, n_s: as above
 n_pitches: size of pitch "vocabulary" for both input and output. Excluding beat information.
-
 Return: Keras model instance
 '''
 def model(Tx, Ty, n_a, n_s, n_pitches):
@@ -74,7 +79,7 @@ def model(Tx, Ty, n_a, n_s, n_pitches):
 	s0 = Input(shape=(n_s, ), name='s0')
 	c0 = Input(shape=(n_s, ), name='c0')
 	s = s0
-	c = c0 # to initialise for looping
+	c = c0 # to initialize for looping
 
 	outputs = []
 
@@ -84,14 +89,16 @@ def model(Tx, Ty, n_a, n_s, n_pitches):
     for t in range(Ty):
         context = one_step_attention(a,s)
         s, _, c = post_activation_LSTM_cell(context, initial_state=[s,c])
-        out = output_layer(s)
+        out = []
+        for voice in range(n_c_Y-1):
+        	out[voice] = output_layer(s)
         outputs.append(out)
 
     model = Model(inputs=[X, s0, c0], outputs=outputs)
 
     return model
 
-model = model(Tx, Ty, n_a, n_s, n_pitches)
+'''model = model(Tx, Ty, n_a, n_s, n_pitches)
 
 model.summary()
 
@@ -102,4 +109,4 @@ s0 = np.zeros((m, n_s))
 c0 = np.zeros((m, n_s))
 outputs = list(Yoh.swapaxes(0,1))
 
-model.fit([Xoh, s0, c0], outputs, epochs=1, batch_size=100)
+model.fit([Xoh, s0, c0], outputs, epochs=1, batch_size=100)'''
