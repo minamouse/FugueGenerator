@@ -12,7 +12,7 @@ def process_voice(piece, part):
     try:
         for n in piece.parts[part].flat:
             if isinstance(n, note.Note):
-                entire_part.append([n.step, n.duration.quarterLength])
+                entire_part.append([n.nameWithOctave, n.duration.quarterLength])
             elif isinstance(n, note.Rest):
                 entire_part.append(['R', n.duration.quarterLength])
     except (AttributeError, IndexError):
@@ -64,15 +64,17 @@ def process_piece(chorale):
 def process_pieces(pieces):
 
     new_pieces = []
+    active_voices = []
 
     for piece in pieces:
-        piece, active_voices = process_piece(piece)
-        if piece:
-            new_pieces.append([piece, active_voices])
+        new_piece, active_voice = process_piece(piece)
+        if new_piece:
+            new_pieces.append(new_piece)
+            active_voices.append(active_voice)
         else:
             print(piece, "uneven voice lengths")
 
-    return new_pieces
+    return new_pieces, active_voices
 
 
 def filter_file_list(file_list):
@@ -104,9 +106,49 @@ def make_time_stamp(length):
 def get_subject(piece, active_voices):
 
     summed = [sum(l) for l in zip(*active_voices)]
-    if summed[0] == 1:
+    if summed[0] <= 1:
+        voice_num = 0
+        for n, voice in enumerate(piece[:4]):
+            if voice[0] != 'R':
+                voice_num = n
         ind = summed.index(2)
-        return piece[0:ind]
+        return piece[voice_num][:ind]
+
+
+def make_subject_same_size(data, token='fin'):
+
+    length = 0
+    for d in data:
+        if len(d) > length:
+            length = len(d)
+
+
+    length += 1
+    new_data = []
+    for d in data:
+        while len(d) < length:
+            d.append(token)
+        new_data.append(d)
+
+    return new_data
+
+
+def make_fugues_same_size(data, token='fin'):
+
+    length = 0
+    for d in data:
+        if len(d) > length:
+            length = len(d)
+
+
+    length += 1
+    new_data = []
+    for d in data:
+        while len(d) < length:
+            d.append((token, token, token, token, token))
+        new_data.append(d)
+
+    return new_data
 
 
 def make_dataset(pieces, active_voices):
@@ -116,11 +158,16 @@ def make_dataset(pieces, active_voices):
 
     new_pieces = []
     for n, piece in enumerate(pieces):
-            time_stamp = make_time_stamp(len(piece[0]))
-            piece.append(time_stamp)
-            new_pieces.append(piece)
-            X.append(get_subject(piece, active_voice[n]))
-            Y.append(zip(*piece))
+        time_stamp = make_time_stamp(len(piece[0]))
+        piece.append(time_stamp)
+        new_pieces.append(piece)
+        subject = get_subject(piece, active_voices[n])
+        print(subject)
+        X.append(subject)
+        Y.append(zip(*piece))
+
+    X = make_subject_same_size(X)
+    Y = make_fugues_same_size(Y)
     return {'X': X, 'Y': Y}
 
 

@@ -3,10 +3,6 @@ import music21
 from data import initialize_fugues
 from supplementary_data_parser import *
 
-files = get_file_names("fugueData/test")
-validated_files = validate(files)
-dataset = initialize_fugues(validated_files)
-
 def get_file_names(path):
 
     names = []
@@ -37,3 +33,9 @@ def return_data():
     Xoh = make_one_hot_vector_X(dataset["X"], len(dataset["X"]), len(dataset["X"][0]), populate_pitch_values())
     Yoh = make_one_hot_vector_Y(dataset["Y"], len(dataset["Y"]), len(dataset["Y"][0]), len(dataset["Y"][0][0]), populate_pitch_values())
     return X, Y, Xoh, Yoh
+
+  
+files = get_file_names("fugueData/test")
+validated_files = validate(files)
+initialize_fugues(validated_files)
+
