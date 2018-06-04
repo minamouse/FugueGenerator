@@ -60,9 +60,7 @@ def the_model(Tx, Ty, n_a, n_s, n_pitches):
     for t in range(Ty):
         context = one_step_attention(a,s)
         s, _, c = post_activation_LSTM_cell(context, initial_state=[s,c])
-        out = []
-        for voice in range(n_c_Y-1):
-            out.append(output_layer(s))
+        out = output_layer(s)
         outputs.append(out)
 
     model = Model(inputs=[X, s0, c0], outputs=outputs)
@@ -74,7 +72,6 @@ if __name__ == '__main__':
 
     Xoh, Yoh, Tx, Ty, m = load_data('datasets/fugues.p')
     # Dimensions of arrays
-    n_c_Y = 5
     n_pitches = 131 # number of MIDI pitches + rest token + sustain token + fin token
 
     # Hyperparameters
@@ -87,7 +84,7 @@ if __name__ == '__main__':
 
     # Placeholders for data
     X = np.zeros((m, Tx))
-    Y = np.zeros((m, Ty, n_c_Y))
+    Y = np.zeros((m, Ty))
 
     # Define shared layers as global variables
     repeator = RepeatVector(Tx)
@@ -112,5 +109,5 @@ if __name__ == '__main__':
     c0 = np.zeros((m, n_s))
     outputs = list(Yoh.swapaxes(0,1))
 
-    model.fit([Xoh, s0, c0], outputs, epochs=1, batch_size=100)
+    model.fit([Xoh, s0, c0], outputs, epochs=epochs, batch_size=batch_size)
 
