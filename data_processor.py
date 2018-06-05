@@ -2,63 +2,28 @@ import os
 from music21 import converter, note
 import numpy as np
 import pickle
+from pprint import pprint as pp
 
 
-def populate_pitch_values():
+def make_one_hot_vector(X, m, Tx):
 
-    pitch_values = []
-    pitch_classes = ['C', 'C#', 'D', 'E-', 'E', 'F', 'F#', 'G', 'G#', 'A', 'B-', 'B']
-    for i in range(0, 127):
-        note_name = pitch_classes[i % 12]
-        # register = i/12 - 1
-        register = (i + 12 // 2) // 12
-        pitch_values.append(note_name+str(register))
-    pitch_values.append('R')
-    pitch_values.append('_')
-    pitch_values.append('fin')
-    return pitch_values
-
-pitch_values = populate_pitch_values()
-
-
-def make_one_hot_vector_X(X, m, Tx, pitch_values):
-
-    Xoh = np.zeros((m, Tx, len(pitch_values)))
+    Xoh = np.zeros((m, Tx, 131))
     for i in range(m):
         for j in range(Tx):
             note = X[i][j]
-            ind = pitch_values.index(note)
-            one_hot = np.zeros((len(pitch_values)))
-            one_hot[ind] = 1
+            one_hot = np.zeros(131)
+            one_hot[int(note)] = 1
             Xoh[i][j] = one_hot
     return Xoh
-
-
-def make_one_hot_vector_Y(Y, m, Ty, n_c_Y, pitch_values):
-
-    Yoh = np.zeros((m, Ty, n_c_Y-1, len(pitch_values)))
-    Y = Y[:][:][0:n_c_Y-1]
-    for i in range(m):
-        for j in range(Ty):
-            all_one_hots = np.zeros((n_c_Y-1, len(pitch_values)))
-            for k in range(n_c_Y-1):
-                note = Y[i][j][k]
-                ind = pitch_values.index(note)
-                one_hot = np.zeros((len(pitch_values)))
-                one_hot[ind] = 1
-                all_one_hots[k,:] = one_hot
-            Yoh[i][j] = all_one_hots
-    return Yoh
 
 
 def make_X_numpy_array(X):
     m = len(X)
     Tx = len(X[0])
     X_np = np.zeros((m, Tx))
-    pitch_values = populate_pitch_values()
     for i in range(m):
         for j in range(Tx):
-            X_np[i][j] = pitch_values.index(X[i][j])
+            X_np[i][j] = X[i][j]
     return X_np
 
 
@@ -66,12 +31,11 @@ def make_Y_numpy_array(Y):
     m = len(Y)
     Ty = len(Y[0])
     n_c_Y = len(Y[0][0])
-    Y_np = np.zeros((m, Ty, n_c_Y-1))
-    pitch_values = populate_pitch_values()
+    Y_np = np.zeros((m, Ty * (n_c_Y-1)))
     for i in range(m):
         for j in range(Ty):
             for k in range(n_c_Y-1):
-                Y_np[i][j][k] = pitch_values.index(Y[i][j][k])
+                Y_np[i][j+(k*Ty)] = Y[i][j][k]
     return Y_np
 
 
@@ -121,7 +85,7 @@ def get_subject(piece, active_voices):
     if summed[0] <= 1:
         voice_num = 0
         for n, voice in enumerate(piece[:4]):
-            if voice[0] != 'R':
+            if voice[0] != 128:
                 voice_num = n
         ind = summed.index(2)
         return piece[voice_num][:ind]
@@ -133,9 +97,9 @@ def process_voice(piece, part):
     try:
         for n in piece.parts[part].flat:
             if isinstance(n, note.Note):
-                entire_part.append([n.nameWithOctave, n.duration.quarterLength])
+                entire_part.append([n.pitch.midi, n.duration.quarterLength])
             elif isinstance(n, note.Rest):
-                entire_part.append(['R', n.duration.quarterLength])
+                entire_part.append([128, n.duration.quarterLength])
     except (AttributeError, IndexError):
         pass
 
@@ -149,7 +113,7 @@ def expand_part(part):
 
     for p in part:
         new_part.append(p[0])
-        if p[0] == 'R':
+        if p[0] == 128:
             active_voices.append(0)
             for i in range(int(p[1]/step)-1):
                 active_voices.append(0)
@@ -158,7 +122,7 @@ def expand_part(part):
             for i in range(int(p[1]/step)-1):
                 active_voices.append(1)
         for i in range(int(p[1]/step)-1):
-            new_part.append('_')
+            new_part.append(129)
     return new_part, active_voices
 
 
@@ -198,7 +162,7 @@ def process_pieces(pieces):
     return new_pieces, active_voices
 
 
-def make_subject_same_size(data, token='fin'):
+def make_subject_same_size(data, token=130):
 
     length = 0
     for d in data:
@@ -216,7 +180,7 @@ def make_subject_same_size(data, token='fin'):
     return new_data
 
 
-def make_fugues_same_size(data, token='fin'):
+def make_fugues_same_size(data, token=130):
 
     length = 0
     for d in data:
@@ -228,7 +192,7 @@ def make_fugues_same_size(data, token='fin'):
     new_data = []
     for d in data:
         while len(d) < length:
-            d.append((token, token, token, token, token))
+            d.append((token, token, token, token))
         new_data.append(d)
 
     return new_data
@@ -241,8 +205,6 @@ def make_dataset(pieces, active_voices):
 
     new_pieces = []
     for n, piece in enumerate(pieces):
-        time_stamp = make_time_stamp(len(piece[0]))
-        piece.append(time_stamp)
         new_pieces.append(piece)
         subject = get_subject(piece, active_voices[n])
         X.append(subject)
@@ -256,9 +218,85 @@ def make_dataset(pieces, active_voices):
 def return_data(dataset):
     X = make_X_numpy_array(dataset["X"])
     Y = make_Y_numpy_array(dataset["Y"])
-    Xoh = make_one_hot_vector_X(dataset["X"], len(dataset["X"]), len(dataset["X"][0]), populate_pitch_values())
-    Yoh = make_one_hot_vector_Y(dataset["Y"], len(dataset["Y"]), len(dataset["Y"][0]), len(dataset["Y"][0][0]), populate_pitch_values())
+    Xoh = make_one_hot_vector(X, X.shape[0], X.shape[1])
+    Yoh = make_one_hot_vector(Y, Y.shape[0], Y.shape[1])
     return X, Y, Xoh, Yoh
+
+
+def do_transposition(fugue, interval):
+
+    new_fugue = []
+
+    for v in fugue:
+        voice = []
+        for n in v:
+            if n >= 128:
+                voice.append(n)
+            else:
+                voice.append(n+interval)
+        new_fugue.append(voice)
+
+    return new_fugue
+
+
+def transpose_fugue(fugue, max_upward, max_downward):
+
+    fugues = []
+    upward = 0
+    downward = 0
+
+    if max_upward >= 6 and max_downward >= 6:
+        upward = 6
+        downward = 6
+    elif max_upward < 6 and max_downward >= 6:
+        upward = max_upward
+        downward = 6
+        while downward <= max_downward and downward <= 12-upward:
+            downward += 1
+    elif max_upward >= 6 and max_downward < 6:
+        downward = max_downward
+        upward = 6
+        while upward <= max_upward and upward <= 12-downward:
+            upward += 1
+    elif max_upward < 6 and max_downward < 6:
+        downward = max_downward
+        upward = max_upward
+
+    for interval in range(-downward, upward):
+        fugues.append(do_transposition(fugue, interval))
+
+    return fugues
+
+
+def augment_data(fugues, active_voices):
+
+    new_fugues = []
+    new_active_voices = []
+
+    for n, f in enumerate(fugues):
+        max_upward = 0
+        max_downward = 0
+
+        max_note = 0
+        min_note = 127
+        for v in f:
+            mx = max([None if (x > 127) else x for x in v])
+            if mx > max_note:
+                max_note = mx
+
+            mn = min(v)
+            if mn < min_note:
+                min_note = mn
+
+        max_upward = 127-max_note
+        max_downward = min_note
+
+        this_fugue = transpose_fugue(f, max_upward, max_downward)
+        for a in range(len(this_fugue)):
+            new_active_voices.append(active_voices[n])
+        new_fugues.extend(this_fugue)
+
+    return new_fugues, new_active_voices
 
 
 if __name__ == '__main__':
@@ -267,8 +305,8 @@ if __name__ == '__main__':
     files = get_file_names("fugueData/test")
     fugue_list = filter_file_list(files)
     fugues, active_voices = process_pieces(fugue_list)
+    fugues, active_voices = augment_data(fugues, active_voices)
     dataset = make_dataset(fugues, active_voices)
-    print(dataset)
     X, Y, Xoh, Yoh = return_data(dataset)
     final_dataset = {}
     final_dataset['X'] = X
