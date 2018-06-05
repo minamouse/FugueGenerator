@@ -8,7 +8,7 @@ def populate_pitch_values():
 
     pitch_values = []
     pitch_classes = ['C', 'C#', 'D', 'E-', 'E', 'F', 'F#', 'G', 'G#', 'A', 'B-', 'B']
-    for i in range(0, 127):
+    for i in range(128):
         note_name = pitch_classes[i % 12]
         # register = i/12 - 1
         register = (i + 12 // 2) // 12
@@ -27,9 +27,9 @@ def make_one_hot_vector(X, m, Tx, pitch_values):
     for i in range(m):
         for j in range(Tx):
             note = X[i][j]
-            ind = pitch_values.index(note)
+            note = int(note)
             one_hot = np.zeros((len(pitch_values)))
-            one_hot[ind] = 1
+            one_hot[note] = 1
             Xoh[i][j] = one_hot
     return Xoh
 
@@ -238,8 +238,8 @@ def make_dataset(pieces, active_voices):
 def return_data(dataset):
     X = make_X_numpy_array(dataset["X"])
     Y = make_Y_numpy_array(dataset["Y"])
-    Xoh = make_one_hot_vector(dataset["X"], len(dataset["X"]), len(dataset["X"][0]), populate_pitch_values())
-    Yoh = make_one_hot_vector(dataset["Y"], len(dataset["Y"]), len(dataset["Y"][0]), populate_pitch_values())
+    Xoh = make_one_hot_vector(X, X.shape[0], X.shape[1], populate_pitch_values())
+    Yoh = make_one_hot_vector(Y, Y.shape[0], Y.shape[1], populate_pitch_values())
     return X, Y, Xoh, Yoh
 
 
@@ -251,6 +251,8 @@ if __name__ == '__main__':
     fugues, active_voices = process_pieces(fugue_list)
     dataset = make_dataset(fugues, active_voices)
     print(dataset)
+    ytest = make_Y_numpy_array(dataset["Y"])
+    print(ytest)
     X, Y, Xoh, Yoh = return_data(dataset)
     final_dataset = {}
     final_dataset['X'] = X
