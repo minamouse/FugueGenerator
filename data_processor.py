@@ -207,8 +207,11 @@ def make_dataset(pieces, active_voices):
     for n, piece in enumerate(pieces):
         new_pieces.append(piece)
         subject = get_subject(piece, active_voices[n])
-        X.append(subject)
-        Y.append(zip(*piece))
+        if subject:
+            X.append(subject)
+            Y.append(zip(*piece))
+        else:
+            print("Not a fugue")
 
     X = make_subject_same_size(X)
     Y = make_fugues_same_size(Y)
@@ -302,7 +305,7 @@ def augment_data(fugues, active_voices):
 if __name__ == '__main__':
     num_voices = 4
     step = 0.25
-    files = get_file_names("fugueData/test")
+    files = get_file_names("fugueData")
     fugue_list = filter_file_list(files)
     fugues, active_voices = process_pieces(fugue_list)
     fugues, active_voices = augment_data(fugues, active_voices)
