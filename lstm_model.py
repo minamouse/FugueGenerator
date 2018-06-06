@@ -8,7 +8,7 @@ SAMANTHA SILVERSTEIN
 MARINA COTTRELL
 Based on Neural Machine Translation assignment from Coursera – NLP/Sequence Models'''
 
-from keras.models import Model
+from keras.models import Model, load_model
 from keras.layers import Input, LSTM, Dense, Bidirectional, Activation, Dropout, Reshape, Lambda, RepeatVector, Concatenate, Dot, Softmax
 from keras.optimizers import Adam
 import numpy as np
@@ -113,4 +113,5 @@ if __name__ == '__main__':
     outputs = list(Yoh.swapaxes(0,1))
 
     model.fit([Xoh, s0, c0], outputs, epochs=1, batch_size=100)
+    model.save('fugue_model.h5')
 
