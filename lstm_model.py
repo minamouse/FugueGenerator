@@ -60,9 +60,7 @@ def the_model(Tx, Ty, n_a, n_s, n_pitches):
     for t in range(Ty):
         context = one_step_attention(a,s)
         s, _, c = post_activation_LSTM_cell(context, initial_state=[s,c])
-        out = []
-        for voice in range(n_c_Y-1):
-            out.append(output_layer(s))
+        out = output_layer(s)
         outputs.append(out)
 
     model = Model(inputs=[X, s0, c0], outputs=outputs)
