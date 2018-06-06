@@ -83,8 +83,8 @@ if __name__ == '__main__':
     n_s = 64 # hidden state size of post-attention LSTM
 
     # Placeholders for data
-    X = np.zeros((m, Tx))
-    Y = np.zeros((m, Ty))
+    # X = np.zeros((m, Tx))
+    # Y = np.zeros((m, Ty))
 
     # Define shared layers as global variables
     repeator = RepeatVector(Tx)
