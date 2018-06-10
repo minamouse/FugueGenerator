@@ -305,10 +305,10 @@ def augment_data(fugues, active_voices):
 if __name__ == '__main__':
     num_voices = 4
     step = 0.25
-    files = get_file_names("fugueData")
+    files = get_file_names("fugueData/tiny_test")
     fugue_list = filter_file_list(files)
     fugues, active_voices = process_pieces(fugue_list)
-    fugues, active_voices = augment_data(fugues, active_voices)
+    #fugues, active_voices = augment_data(fugues, active_voices)
     dataset = make_dataset(fugues, active_voices)
     X, Y, Xoh, Yoh = return_data(dataset)
     final_dataset = {}
@@ -316,5 +316,5 @@ if __name__ == '__main__':
     final_dataset['Y'] = Y
     final_dataset['Xoh'] = Xoh
     final_dataset['Yoh'] = Yoh
-    pickle.dump(final_dataset, open("datasets/fugues.p", "wb"))
+    pickle.dump(final_dataset, open("datasets/tiny_fugues.p", "wb"))
 
