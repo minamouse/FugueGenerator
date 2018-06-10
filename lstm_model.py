@@ -74,7 +74,6 @@ if __name__ == '__main__':
 
     Xoh, Yoh, Tx, Ty, m = load_data('datasets/fugues.p')
     # Dimensions of arrays
-    n_c_Y = 5
     n_pitches = 131 # number of MIDI pitches + rest token + sustain token + fin token
 
     # Hyperparameters
@@ -86,8 +85,8 @@ if __name__ == '__main__':
     n_s = 128 # hidden state size of post-attention LSTM
 
     # Placeholders for data
-    X = np.zeros((m, Tx))
-    Y = np.zeros((m, Ty, n_c_Y))
+    # X = np.zeros((m, Tx))
+    # Y = np.zeros((m, Ty))
 
     # Define shared layers as global variables
     repeator = RepeatVector(Tx)
